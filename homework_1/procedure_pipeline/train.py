@@ -10,16 +10,17 @@ from homework_1.procedure_pipeline.load_and_save_dataset import load_data
 from homework_1.procedure_pipeline.preprocessing_functions import categorical2num, df2array
 
 
-def train_model(X_train, y_train, model_path, normalizer_path):
+def save(model, path):
+    pickle.dump(model, path)
+
+
+def train_model(X_train, y_train):
     normalizer = Normalizer()
     normalizer.fit(X_train)
     normalized_data = normalizer.transform(X_train)
 
     ada_boost_classifier = AdaBoostClassifier()
     ada_boost_classifier.fit(normalized_data, y_train)
-
-    pickle.dump(ada_boost_classifier, model_path)
-    pickle.dump(normalizer, normalizer_path)
 
     return ada_boost_classifier, normalizer
 
@@ -29,7 +30,9 @@ def train_metrics_count(
 ):
     X_test_df = load_data(test_x_path)
     y_test_ = load_data(test_y_path)
-    y_test = y_test_[y_test_["passenger_id"].isin(X_test_df["passenger_id"].to_list())]["survived"]
+    y_test = y_test_[y_test_["passenger_id"].isin(X_test_df["passenger_id"].to_list())][
+        "survived"
+    ].to_numpy()
     X_test_df = categorical2num(X_test_df)
     X_test = df2array(X_test_df)
 
