@@ -74,7 +74,7 @@ def test_train_model(X_train, y_train):
         [
             column("passenger_id", dtype=int),
             column("pclass", dtype=int),
-            column("sex", dtype=str, fill=sampled_from(elements=["male", "female"])),
+            column("sex", dtype=str, elements=sampled_from(["male", "female"])),
             column("age", dtype=int),
             column("fare", dtype=float),
             column("embarked", dtype=str),
@@ -84,5 +84,4 @@ def test_train_model(X_train, y_train):
 )
 def test_text2num_sex(df):
     answ = text2num_sex(df)
-    print(answ)
-    print(set(answ["sex"]))
+    assert len(set(answ["sex"])) == 0 or len(set(answ["sex"])) == 1 or len(set(answ["sex"])) == 2
